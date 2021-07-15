@@ -1,9 +1,10 @@
 package com.example.bluedit.controller;
 
-import com.example.bluedit.controller.dto.RegisterRequest;
+import com.example.bluedit.dto.AuthenticationResponse;
+import com.example.bluedit.dto.LoginRequest;
+import com.example.bluedit.dto.RegisterRequest;
 import com.example.bluedit.service.AuthService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,5 +27,10 @@ public class AuthController {
     public ResponseEntity<String> verifyAccount(@PathVariable String token){
         authService.verifyAccount(token);
         return new ResponseEntity<>("Account Activated Successfully", OK);
+    }
+
+    @PostMapping("/login")
+    public AuthenticationResponse login (@RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
     }
 }
