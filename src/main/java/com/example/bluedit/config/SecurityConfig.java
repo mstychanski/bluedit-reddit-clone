@@ -1,8 +1,8 @@
 package com.example.bluedit.config;
 
-import com.example.bluedit.service.UserDetailServiceImpl;
+
+import com.example.bluedit.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
-import net.bytebuddy.implementation.bind.annotation.Super;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -13,12 +13,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.Filter;
 
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -35,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()
                 .authenticated();
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
